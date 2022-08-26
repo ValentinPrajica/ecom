@@ -6,7 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script src="https://cdn.rtlcss.com/bootstrap/v4.3.1/js/bootstrap.min.js" integrity="sha384-2NsOVs5JcOR/wf4f2u5VYxUT+23fCbG29ajnpPYiyCZWF0dT4Ik3Qewqmf+pwm/d" crossorigin="anonymous"></script>
+
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="{% static 'shop/style.css' %}">
     <title>Document</title>
 </head>
@@ -41,9 +47,9 @@
                             ${{ product.price }}
                         </div>
 
-                        <a href="/{{ product.id }}" class="btn btn-warning">View</a>
-                        <a href="/{{ product.id }}" class="btn btn-warning">Add to card</a>
-
+                        <a href="/{‌{product.id}}" class="btn btn-warning">View</a>
+                        <button id="{‌{product.id}}" class="btn atc btn-warning">Add to cart</button>
+                        
                     </div>
                 </div>
             </div>
@@ -75,4 +81,35 @@
 
     </div>
 </body>
+
+<script type="text/javascript">
+
+    console.log('this is working');
+
+    //check if cart exist,if not create the cart
+    if(localStorage.getItem('cart')==null){//'cart'from local storage
+        var cart ={};//cart created of us
+    }
+    else{
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    $(document).on('click','.atc',function(){
+       console.log("The add to card button is clicked") ;
+       var item_id = this.id.toString();//give us acces to item_id variable and convert into string
+       console.log(item_id);
+
+       if(card[item_id]!=null){
+            cart[item_id] = cart[item_id] + 1;
+       }
+       else{
+            cart[item_id] = 1;
+       }
+       console.log(cart);
+       localStorage.setItem('cart',JSON.stringify(cart));
+
+    });
+
+</script>
+
 </html>
