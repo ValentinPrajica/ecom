@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
+  
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
-
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
     <link rel="stylesheet" href="{% static 'shop/style.css' %}">
     <title>Document</title>
 </head>
@@ -35,7 +36,10 @@
                           <a class="nav-link" href="#">Features</a>
                         </li>
                         <li class="nav-item">
-                          <a id="cart" class="nav-link" href="#">Cart(0)</a>
+                            <button data-html="true" id="cart" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+                            sagittis lacus vel augue laoreet rutrum faucibus.">
+                              Cart(0)
+                            </button>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link disabled" href="#">Disabled</a>
@@ -67,15 +71,15 @@
                 <div class="card">
                     <img src="{{ product.image }}" class="card-img-top">
                     <div class="card-body">
-                        <div class="card-title">
+                        <div id="nm{{product.id}}" class="card-title">
                             {{ product.title }}
                         </div>
                         <div class="card-text">
-                            ${{ product.price }}
+                            {{ product.price }}
                         </div>
 
-                        <a href="/{‌{product.id}}" class="btn btn-warning">View</a>
-                        <button id="{{ product.id }}" class="atc btn btn-warning">Add to cart</button>
+                        <a href="/{{product.id}}" class="btn btn-warning">View</a>
+                        <button id="{{product.id}}" class="btn atc btn-warning">Add to cart</button>
                         
                     </div>
                 </div>
@@ -111,8 +115,9 @@
 
 <script type="text/javascript">
 
-    console.log('this is working');
-
+    //console.log('this is working');
+    localStorage.clear();
+    var cart_str = "";
     //check if cart exist,if not create the cart
     if(localStorage.getItem('cart')==null){//'cart'from local storage
         var cart ={};//cart created of us
@@ -122,21 +127,41 @@
     }
 
     $(document).on('click','.atc',function(){
-       console.log("The add to cart button is clicked") ;
+       //console.log("The add to cart button is clicked") ;
        var item_id = this.id.toString();//give us acces to item_id variable and convert into string
        console.log(item_id);
 
-       if(cart[item_id]!=null){
+       if(cart[item_id]!=undefined){
             cart[item_id] = cart[item_id] + 1;
        }
        else{
             cart[item_id] = 1;
        }
-       console.log(cart);
+       //console.log(cart);
        localStorage.setItem('cart',JSON.stringify(cart));
        document.getElementById("cart").innerHTML = "Cart(" + Object.keys(cart).length + ")"; 
        
     });
+    //$(function () {
+  //$('[data-toggle="popover"]').popover()
+   // document.getElementById("cart").setAttribute('data-content','<h5>This is your cart</h5>');  
+//});
+
+DisplayCart(cart);
+function DisplayCart(cart){
+    var cartString ="";
+    cartString += "<h5>This is your cart</h5>";
+
+    var cartIndex = 1;
+    for(var x in cart){
+        cartString += cartIndex;
+        cartString += document.getElementById("nm" + x).innerHTML + "qty:" + cart[x] + "</br>";
+        cartIndex += 1;
+    }
+    document.getElementById("cart").setAttribute('data-content',cartString);
+    $('[data-toggle="popover"]').popover();
+
+}
 
 </script>
 
